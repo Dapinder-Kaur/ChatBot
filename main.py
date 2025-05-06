@@ -7,7 +7,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 
 # a chatbot function
-def chatbot_func(input: str, model=genai.GenerativeModel("gemini")):
+def chatbot_func(input: str, model=genai.GenerativeModel("gemini-1.5-pro-002")):
 
     # Make the API request
     chat = model.start_chat(history=[])
