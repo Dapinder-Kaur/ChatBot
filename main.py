@@ -31,6 +31,21 @@ def chatbot_actual(input_text):
     return response
 
 
+# a chatbot function for streamlit
+def chatbot_actual_for_streamlit(input_text):
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=input_text,
+    )
+
+    return response.text
+
+
+# for streamlit
+def input_text():
+    return input(f"{Yellow}User: {Reset}")
+
+
 def main():
     # an example_usage function to test the API
     def example_usage():
