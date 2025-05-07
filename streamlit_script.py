@@ -13,9 +13,10 @@ def streamlit_app():
     left_column, right_column = st.columns(2)
 
     left_column.write("How Can I Help You?")
-    user_input = left_column.text_input(
-        "User Input", placeholder="Type your message here..."
-    )
+
+    right_column.write("Gemini's Response")
+    right_column.write(placeholder="Gemini's response will appear here...")
+    left_column.text_input("User: ", placeholder="Type your message here...")
 
 
 if __name__ == "__main__":

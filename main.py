@@ -38,7 +38,10 @@ def main():
         return response.text
 
     # to take an input from the user
-    input_text = input(f"{Yellow}User: {Reset}")
+    def input_text():
+        return input(f"{Yellow}User: {Reset}")
+
+    input_text = input_text()
 
     # storing the gemini's response
     response: str = chatbot_actual(input_text)
