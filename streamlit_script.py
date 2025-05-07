@@ -4,7 +4,8 @@ import random
 import time
 from PIL import Image
 from google import genai
-import main
+from main import main
+from main import chatbot_actual
 
 
 # streamlit application function
@@ -40,24 +41,16 @@ def streamlit_app_design_2():
 
     # Accept user input
     if prompt := st.chat_input("What is up?"):
-        # display user message in chat message container
+        st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
-        # Adding message to the chat history
-        st.session_state.messages.append({"role": "user", "content": prompt})
 
-    functions = main.main()
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    # st.session_state.messages.append({"role": "assistant", "content": response})
+    with st.chat_message("assistant"):
 
-    # with st.chat_message("assistant"):
-    #     stream = client.models.generate_content_stream(
-    #         model=st.session_state["gemini_model"],
-    #         contents=prompt,
-    #     )
-    #     response = st.write_stream(stream)
+        response = chatbot_actual(prompt)
+        st.markdown(response)
 
-    # st.session_state.messages.append({"role": "assistant", "content": response})
+    st.session_state.messages.append({"role": "assistant", "content": response})
 
 
 if __name__ == "__main__":

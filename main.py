@@ -21,21 +21,22 @@ Gray = "\033[37m"
 White = "\033[97m"
 
 
+# an actual chatbot function
+def chatbot_actual(input_text):
+    response = client.models.generate_content_stream(
+        model="gemini-2.0-flash",
+        contents=input_text,
+    )
+
+    return response
+
+
 def main():
     # an example_usage function to test the API
     def example_usage():
         response = client.models.generate_content_stream(
             model="gemini-2.0-flash", contents="Hi, How are you?"
         )
-        return response
-
-    # an actual chatbot function
-    def chatbot_actual(input_text):
-        response = client.models.generate_content_stream(
-            model="gemini-2.0-flash",
-            contents=input_text,
-        )
-
         return response
 
     # to take an input from the user
