@@ -20,14 +20,14 @@ def chatbot_actual(input_text):
 
 
 input_text = input("User: ")
-response = chatbot_actual(input_text)
+response: str = chatbot_actual(input_text)
 # response = example_usage()
 
 
 def print_response(response):
     for chunk in response.split(" "):
-        print(chunk, end=" ")
-        time.sleep(0.1)
+        time.sleep(0.3)
+        print(chunk, end=" ", flush=True)
 
 
 print_response(response)
