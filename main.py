@@ -1,22 +1,26 @@
-import requests
-import google.generativeai as genai
-import time
+from google import genai
+
+client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
 
 
-GOOGLE_API_KEY = "AIzaSyD_nRcAau-qH_I_1tRQ5RTIaaGR67oBwyY"
-genai.configure(api_key=GOOGLE_API_KEY)
-
-
-# a chatbot function
-def chatbot_func(input: str, model=genai.GenerativeModel("gemini-1.5-pro-002")):
-
-    # Make the API request
-    chat = model.start_chat(history=[])
-
-    response = chat.send_message(input, stream=True)
+def example_usage():
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents="Explain how AI works in a few words",
+    )
     return response.text
 
 
-input = input("User: ")
-answer = chatbot_func(input)
-print(answer)
+def chatbot_actual(input_text):
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=input_text,
+    )
+    return response.text
+
+
+# input_text = input("User: ")
+# response = chatbot_actual(input_text)
+response = example_usage()
+
+print(response)
