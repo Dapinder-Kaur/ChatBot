@@ -31,11 +31,12 @@ def main():
 
     # an actual chatbot function
     def chatbot_actual(input_text):
-        response = client.models.generate_content(
+        response = client.models.generate_content_stream(
             model="gemini-2.0-flash",
             contents=input_text,
         )
-        return response.text
+
+        return response
 
     # to take an input from the user
     def input_text():
@@ -44,18 +45,15 @@ def main():
     input_text = input_text()
 
     # storing the gemini's response
-    response: str = chatbot_actual(input_text)
+    response = chatbot_actual(input_text)
 
     # response = example_usage() # to test the example_usage function
 
-    # printing the response in chunks with delay of 0.3 seconds
-    def print_response(response):
-        for chunk in response.split(" "):
-            time.sleep(0.3)
-            print(chunk, end=" ", flush=True)
-
-    # calling the function to print the response
-    print_response(f"{Blue}Gemini: {Reset}{response}")
+    # printing the response in chunks
+    print(f"{Blue}Gemini: {Reset}", end="")
+    for chunk in response:
+        # time.sleep(0.1)
+        print(chunk.text, end=" ")
 
 
 if __name__ == "__main__":
