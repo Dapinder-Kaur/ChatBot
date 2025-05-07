@@ -9,7 +9,7 @@ import streamlit as st
 client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
 
 
-# colors
+# ANSI escape sequences for colored text
 Reset = "\033[0m"
 Red = "\033[31m"
 Green = "\033[32m"
