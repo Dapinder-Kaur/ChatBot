@@ -1,12 +1,14 @@
-# # importing necessary libraries
-# import streamlit as st
-# import random
-# import time
-# from PIL import Image
-# from google import genai
-# from main import main
-# from main import chatbot_actual_for_streamlit
-# from main import client
+# importing necessary libraries
+import streamlit as st
+import random
+import time
+from PIL import Image
+from google import genai
+from main import main
+from main import chatbot_actual_for_streamlit
+from main import client
+
+from chatbot import chatbot_response
 
 
 # # streamlit application function
@@ -64,80 +66,71 @@
 # ======================================================
 
 
-# # Set up the client with the API key
-# client = client
+# Set up the client with the API key
+client = client
 
-# # Streamlit UI setup
-# st.set_page_config(page_title="Your personal gemini", layout="centered")
-# st.title("AI Chatbot")
+# Streamlit UI setup
+st.set_page_config(page_title="Your personal gemini", layout="centered")
+st.title("AI Chatbot")
 
-# # Input box for user messages
-# user_input = st.text_area("Enter your message:", key="input_text")
-
-
-# # Function to get chatbot response
-# def chatbot_response(input_text):
-#     response = client.models.generate_content(
-#         model="gemini-2.0-flash",
-#         contents=input_text,
-#     )
-#     return response.text
+# Input box for user messages
+user_input = st.text_area("Enter your message:", key="input_text")
 
 
-# # Display response when button is clicked
-# if st.button("Send"):
-#     if user_input:
-#         response = chatbot_response(user_input)
-#         st.subheader("Chatbot Response:")
-#         st.write(response)
-#     else:
-#         st.warning("Please enter a message before sending.")
+# Display response when button is clicked
+if st.button("Send"):
+    if user_input:
+        response = chatbot_response(user_input)
+        st.subheader("Chatbot Response:")
+        st.write(response)
+    else:
+        st.warning("Please enter a message before sending.")
 
 
-# # ======================================================
+# ======================================================
 
-# Trying something completely different
-import os
-import streamlit as st
-from dotenv import load_dotenv
-from functions import *
-from main import API_KEY
-from google import genai as gpt
+# # Trying something completely different
+# import os
+# import streamlit as st
+# from dotenv import load_dotenv
+# from functions import *
+# from main import API_KEY
+# from google import genai as gpt
 
-load_dotenv()
+# load_dotenv()
 
-st.set_page_config(
-    page_titile="Baxter Chat",
-    page_icon=":robot_face:",
-    layout="wide",
-)
+# st.set_page_config(
+#     page_titile="Baxter Chat",
+#     page_icon=":robot_face:",
+#     layout="wide",
+# )
 
-API_KEY = os.getenv(API_KEY)
+# API_KEY = os.getenv(API_KEY)
 
-gpt.configure(api_key=API_KEY)
-model = gpt.GenerativeModel("gemini-2.0-flash")
+# gpt.configure(api_key=API_KEY)
+# model = gpt.GenerativeModel("gemini-2.0-flash")
 
-if "chat_session" not in st.session_state:
-    st.session_state.chat_session = model.start_chat(history=[])
+# if "chat_session" not in st.session_state:
+#     st.session_state.chat_session = model.start_chat(history=[])
 
-st.title("Baxter Chat")
+# st.title("Baxter Chat")
 
-for msg in st.session_state.chat_session.history:
-    with st.chat_message(map_role(msg["role"])):
-        st.markdown(msg["content"])
+# for msg in st.session_state.chat_session.history:
+#     with st.chat_message(map_role(msg["role"])):
+#         st.markdown(msg["content"])
 
 
-user_input = st.chat_input("Type your message here...")
+# user_input = st.chat_input("Type your message here...")
 
-if user_input:
-    st.chat_message("user").markdown(user_input)
+# if user_input:
+#     st.chat_message("user").markdown(user_input)
 
-    gemini_response = fetch_gemini_response(user_input)
+#     gemini_response = fetch_gemini_response(user_input)
 
-    with st.chat_message("assistant"):
-        st.markdown(gemini_response)
+#     with st.chat_message("assistant"):
+#         st.markdown(gemini_response)
 
-st.session_state.chat_session.history.append({"role": "user", "content": user_input})
-st.session_state.chat_session.history.append(
-    {"role": "model", "content": gemini_response}
-)
+# st.session_state.chat_session.history.append({"role": "user", "content": user_input})
+# st.session_state.chat_session.history.append(
+#     {"role": "model", "content": gemini_response}
+# )

@@ -4,6 +4,8 @@ from PIL import Image
 import time
 import streamlit as st
 
+from chatbot import chatbot_stream_response
+
 API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
 # setting up the client with the API key
 client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
@@ -61,7 +63,7 @@ def main():
     input_text = input_text()
 
     # storing the gemini's response
-    response = chatbot_actual(input_text)
+    response = chatbot_stream_response(input_text)
 
     # response = example_usage() # to test the example_usage function
 
