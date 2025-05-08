@@ -4,7 +4,7 @@ from PIL import Image
 import time
 import streamlit as st
 
-
+API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
 # setting up the client with the API key
 client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
 
