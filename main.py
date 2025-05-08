@@ -35,12 +35,12 @@ def chatbot_actual(input_text):
 
 # a chatbot function for streamlit
 def chatbot_actual_for_streamlit(input_text):
-    response = client.models.generate_content(
+    response = client.models.generate_content_stream(
         model="gemini-2.0-flash",
         contents=input_text,
     )
 
-    return response.text
+    return response
 
 
 # for streamlit
