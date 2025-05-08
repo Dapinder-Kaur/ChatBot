@@ -11,6 +11,16 @@ API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
 client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
 
 
+system_prompt = "Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours\
+    in the smart factory. You are a polite and helpful communicator at \
+    Red River College Polytechnic providing quality of service"
+
+chat_history = []
+formatted_history = []
+prompt_template = (
+    "System: {system_prompt} \nHistory: {chat_history} \nUser: {user_input}"
+)
+
 # ANSI escape sequences for colored text
 Reset = "\033[0m"
 Red = "\033[31m"
@@ -61,9 +71,17 @@ def main():
         return input(f"{Yellow}User: {Reset}")
 
     input_text = input_text()
+    chat_history.append({"user": input_text})
+    formatted_history = "\n".join([f"User: {msg['user']}" for msg in chat_history])
 
+    final_prompt = prompt_template.format(
+        system_prompt=system_prompt,
+        chat_history=formatted_history,
+        user_input=input_text,
+    )
     # storing the gemini's response
-    response = chatbot_stream_response(input_text)
+
+    response = chatbot_stream_response(final_prompt)
 
     # response = example_usage() # to test the example_usage function
 
