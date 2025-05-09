@@ -3,13 +3,15 @@ from google import genai
 from PIL import Image
 import time
 import streamlit as st
-
+import os
 from chatbot import chatbot_stream_response
 import sys
 
-API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
+# API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
 # setting up the client with the API key
-client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
+client = genai.Client(
+    api_key=os.environ.get("API_KEY"),
+)
 
 
 system_prompt = "Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours\

@@ -8,10 +8,10 @@ from google.genai import types
 
 def generate():
     client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY"),
+        api_key=os.environ.get("API_KEY"),
     )
 
-    model = "gemini-2.5-pro-preview-05-06"
+    model = "gemini-2.0-flash"
     contents = [
         types.Content(
             role="user",
