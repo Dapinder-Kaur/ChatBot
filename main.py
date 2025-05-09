@@ -5,6 +5,7 @@ import time
 import streamlit as st
 
 from chatbot import chatbot_stream_response
+import sys
 
 API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
 # setting up the client with the API key
@@ -13,7 +14,8 @@ client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
 
 system_prompt = "Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours\
     in the smart factory. You are a polite and helpful communicator at \
-    Red River College Polytechnic providing quality of service"
+    Red River College Polytechnic providing quality of service. We have a robot playing chess, its white in color and has a screen.\
+        Smart Factory is located in T building at Red River College Polytechnic"
 
 chat_history = []
 formatted_history = []
@@ -66,30 +68,38 @@ def main():
         )
         return response
 
-    # to take an input from the user
-    def input_text():
-        return input(f"{Yellow}User: {Reset}")
+    try:
+        while True:
+            # to take an input from the user
+            def input_text():
+                return input(f"{Yellow}User: {Reset}")
 
-    input_text = input_text()
-    chat_history.append({"user": input_text})
-    formatted_history = "\n".join([f"User: {msg['user']}" for msg in chat_history])
+            input_text = input_text()
+            chat_history.append({"user": input_text})
+            formatted_history = "\n".join(
+                [f"User: {msg['user']}" for msg in chat_history]
+            )
 
-    final_prompt = prompt_template.format(
-        system_prompt=system_prompt,
-        chat_history=formatted_history,
-        user_input=input_text,
-    )
-    # storing the gemini's response
+            final_prompt = prompt_template.format(
+                system_prompt=system_prompt,
+                chat_history=formatted_history,
+                user_input=input_text,
+            )
+            # storing the gemini's response
 
-    response = chatbot_stream_response(final_prompt)
+            response = chatbot_stream_response(final_prompt)
 
-    # response = example_usage() # to test the example_usage function
+            # response = example_usage() # to test the example_usage function
 
-    # printing the response in chunks
-    print(f"{Blue}Gemini: {Reset}", end="")
-    for chunk in response:
-        # time.sleep(0.1)
-        print(chunk.text, end=" ")
+            # printing the response in chunks
+            print(f"{Blue}Gemini: {Reset}", end="")
+            for chunk in response:
+                print(chunk.text, end="")
+
+    except KeyboardInterrupt:
+        print(f"\n{Red}Exiting...{Reset}")
+        sys.exit(0)
+        # zero here represents the successful termination of the program
 
 
 if __name__ == "__main__":
