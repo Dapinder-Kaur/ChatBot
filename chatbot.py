@@ -1,6 +1,5 @@
 """A file containing all the important functions needed for chatbot's smooth functionality"""
 
-# importing the required libraries
 from google import genai
 from google.genai import types
 import os
@@ -45,7 +44,6 @@ def chatbot_stream_response(input_text):
 
 def output_function(response):
 
-    # time.sleep(0.1)
     return response
 
 

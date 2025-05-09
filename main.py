@@ -1,4 +1,3 @@
-# importing the required libraries
 from google import genai
 from PIL import Image
 import time
@@ -18,7 +17,6 @@ from google.genai import types
 load_dotenv()
 
 
-# setting up the client with the API key
 client = genai.Client(
     api_key=os.environ.get("API_KEY"),
 )
@@ -57,11 +55,10 @@ def main():
 
             response = response_system_prompt(history)
 
-            # response = example_usage() # to test the example_usage function
-
-            # printing the response in chunks
             print(f"{Blue}Gemini: {Reset}", end="")
+
             chunk_response = ""
+
             for chunk in response:
                 print(chunk.text, end="")
                 chunk_response += chunk.text
