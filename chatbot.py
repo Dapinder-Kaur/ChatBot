@@ -1,6 +1,12 @@
+"""A file containing all the important functions needed for chatbot's smooth functionality"""
+
 # importing the required libraries
 from google import genai
+from google.genai import types
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # ANSI escape sequences for colored text
 Reset = "\033[0m"
@@ -13,9 +19,11 @@ Cyan = "\033[36m"
 Gray = "\033[37m"
 White = "\033[97m"
 
-API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
+
 # setting up the client with the API key
-client = genai.Client(api_key="AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU")
+client = genai.Client(
+    api_key=os.environ.get("API_KEY"),
+)
 
 
 # Function to get chatbot response
@@ -46,3 +54,67 @@ def chat_output(response):
     for chunk in response:
         # time.sleep(0.1)
         print(chunk.text, end=" ")
+
+
+# A varable to store the system prompt for the chatbot
+generate_content_config = types.GenerateContentConfig(
+    response_mime_type="text/plain",
+    system_instruction=[
+        types.Part.from_text(
+            text="""Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours\
+    in the smart factory. You are a polite and helpful communicator at \
+    Red River College Polytechnic providing quality of service. We have a robot playing chess, its white in color and has a screen.\
+        Smart Factory is located in T building at Red River College Polytechnic"""
+        ),
+    ],
+)
+
+
+def response_system_prompt(prompt):
+    response = client.models.generate_content_stream(
+        model="gemini-2.0-flash",
+        contents=prompt,
+        config=generate_content_config,
+    )
+
+    return response
+
+
+# an actual chatbot function
+def chatbot_actual(input_text):
+    response = client.models.generate_content_stream(
+        model="gemini-2.0-flash",
+        contents=input_text,
+    )
+
+    return response
+
+
+# a chatbot function for streamlit
+def chatbot_actual_for_streamlit(input_text):
+    response = client.models.generate_content_stream(
+        model="gemini-2.0-flash",
+        contents=input_text,
+    )
+
+    return response
+
+
+def example_usage():
+    response = client.models.generate_content_stream(
+        model="gemini-2.0-flash", contents="Hi, How are you?"
+    )
+
+    return response
+
+
+def chat_history_function(input_text, response):
+
+    chat_history = []
+    chat_history.append(
+        types.Content(role="user", parts=[types.Part.from_text(text=input_text)])
+    )
+    chat_history.append(
+        types.Content(role="model", parts=[types.Part.from_text(text=response)])
+    )
+    return chat_history

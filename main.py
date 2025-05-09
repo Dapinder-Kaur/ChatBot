@@ -4,27 +4,25 @@ from PIL import Image
 import time
 import streamlit as st
 import os
-from chatbot import chatbot_stream_response
+from chatbot import (
+    chatbot_stream_response,
+    chat_history_function,
+    response_system_prompt,
+)
 import sys
+from dotenv import load_dotenv
+from google.genai import types
 
-# API_KEY = "AIzaSyCRL3Ujbp6j-Gh1d1kO3PNWBLJqc5a1QGU"
+
+# loading the environment variables from the .env file
+load_dotenv()
+
+
 # setting up the client with the API key
 client = genai.Client(
     api_key=os.environ.get("API_KEY"),
 )
 
-
-# A variable for storing the system level of instructions to the bot
-system_prompt = "Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours\
-    in the smart factory. You are a polite and helpful communicator at \
-    Red River College Polytechnic providing quality of service. We have a robot playing chess, its white in color and has a screen.\
-        Smart Factory is located in T building at Red River College Polytechnic"
-
-chat_history = []
-formatted_history = []
-prompt_template = (
-    "System: {system_prompt} \nHistory: {chat_history} \nUser: {user_input}"
-)
 
 # ANSI escape sequences for colored text
 Reset = "\033[0m"
@@ -38,38 +36,8 @@ Gray = "\033[37m"
 White = "\033[97m"
 
 
-# an actual chatbot function
-def chatbot_actual(input_text):
-    response = client.models.generate_content_stream(
-        model="gemini-2.0-flash",
-        contents=input_text,
-    )
-
-    return response
-
-
-# a chatbot function for streamlit
-def chatbot_actual_for_streamlit(input_text):
-    response = client.models.generate_content_stream(
-        model="gemini-2.0-flash",
-        contents=input_text,
-    )
-
-    return response
-
-
-# for streamlit
-def input_text():
-    return input(f"{Yellow}User: {Reset}")
-
-
 def main():
-    # an example_usage function to test the API
-    def example_usage():
-        response = client.models.generate_content_stream(
-            model="gemini-2.0-flash", contents="Hi, How are you?"
-        )
-        return response
+    history = []
 
     try:
         while True:
@@ -77,29 +45,36 @@ def main():
             def input_text():
                 return input(f"{Yellow}User: {Reset}")
 
-            input_text = input_text()
-            chat_history.append({"user": input_text})
-            formatted_history = "\n".join(
-                [f"User: {msg['user']}" for msg in chat_history]
-            )
+            def format_input_text(input_text):
+                return types.Content(
+                    role="user", parts=[types.Part.from_text(text=input_text)]
+                )
 
-            final_prompt = prompt_template.format(
-                system_prompt=system_prompt,
-                chat_history=formatted_history,
-                user_input=input_text,
-            )
+            input_text = input_text()
+
             # storing the gemini's response
 
-            response = chatbot_stream_response(final_prompt)
+            history.append(
+                types.Content(
+                    role="user", parts=[types.Part.from_text(text=input_text)]
+                )
+            )
+
+            response = response_system_prompt(history)
 
             # response = example_usage() # to test the example_usage function
 
             # printing the response in chunks
             print(f"{Blue}Gemini: {Reset}", end="")
+            chunk_response = ""
             for chunk in response:
                 print(chunk.text, end="")
+                chunk_response += chunk.text
+
+            history = chat_history_function(input_text, chunk_response)
 
     except KeyboardInterrupt:
+
         print(f"\n{Red}Exiting...{Reset}")
         sys.exit(0)
         # zero here represents the successful termination of the program
