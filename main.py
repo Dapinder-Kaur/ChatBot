@@ -45,11 +45,6 @@ def main():
             def input_text():
                 return input(f"{Yellow}User: {Reset}")
 
-            def format_input_text(input_text):
-                return types.Content(
-                    role="user", parts=[types.Part.from_text(text=input_text)]
-                )
-
             input_text = input_text()
 
             # storing the gemini's response
