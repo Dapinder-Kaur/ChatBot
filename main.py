@@ -7,13 +7,13 @@ from chatbot import (
     chatbot_stream_response,
     chat_history_function,
     response_system_prompt,
+    history_function,
 )
 import sys
 from dotenv import load_dotenv
 from google.genai import types
 
 
-# loading the environment variables from the .env file
 load_dotenv()
 
 
@@ -40,42 +40,20 @@ def main():
     try:
         while True:
             input_text = input(f"{Yellow}User: {Reset}")
-
-            # storing the gemini's response
-
-            chat_history.append(
-                types.Content(
-                    role="user", parts=[types.Part.from_text(text=input_text)]
-                )
-            )
-
+            chat_history = history_function(chat_history, "user", input_text)
             response = response_system_prompt(chat_history)
-
             print(f"{Blue}ChatBot: {Reset}", end="")
-
             chunk_response = ""
 
             for chunk in response:
                 print(chunk.text, end="")
                 chunk_response += chunk.text
 
-            chat_history.append(
-                types.Content(
-                    role="user", parts=[types.Part.from_text(text=input_text)]
-                )
-            )
-            chat_history.append(
-                types.Content(
-                    role="model", parts=[types.Part.from_text(text=chunk_response)]
-                )
-            )
-            # history.append(chat_history_function(input_text, chunk_response))
+            chat_history = history_function(chat_history, "model", chunk_response)
 
     except KeyboardInterrupt:
-
         print(f"\n{Red}Exiting...{Reset}")
         sys.exit(0)
-        # zero here represents the successful termination of the program
 
 
 if __name__ == "__main__":

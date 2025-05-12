@@ -1,25 +1,25 @@
-# import gradio as gr
-# import random
-# import time
-# from google import genai
-# import os
-# from dotenv import load_dotenv
-# from google.genai import types
-# from chatbot import (
-#     chatbot_stream_response,
-#     chat_history_function,
-#     response_system_prompt,
-# )
+import gradio as gr
+import random
+import time
+from google import genai
+import os
+from dotenv import load_dotenv
+from google.genai import types
+from chatbot import (
+    chatbot_stream_response,
+    chat_history_function,
+    response_system_prompt,
+)
 
 
-# # Load environment variables
-# load_dotenv()
+# Load environment variables
+load_dotenv()
 
-# client = genai.Client(api_key=os.environ.get("API_KEY"))
+client = genai.Client(api_key=os.environ.get("API_KEY"))
 
-# # Chatbot function for Gradio
-# history = []
-# history_gradio = []
+# Chatbot function for Gradio
+history = []
+history_gradio = []
 
 
 # def chatbot_interface(user_input):
@@ -69,11 +69,15 @@ with gr.Blocks() as demo:
     clear = gr.ClearButton([msg, chatbot])
 
     def respond(message, chat_history):
-        bot_message = "How are you? "
-        chat_history.append({"role": "user", "content": message})
-        chat_history.append({"role": "assistant", "content": bot_message})
+
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=message,
+        )
+        chat_history.append({"role": "user", "content": message + "lol"})
+        chat_history.append({"role": "assistant", "content": response.text})
         return "", chat_history
 
-    msg.submit(respond, [msg, chatbot], [msg, chatbot])
+    msg.submit(fn=respond, inputs=[msg, chatbot], outputs=[msg, chatbot])
 
 demo.launch()

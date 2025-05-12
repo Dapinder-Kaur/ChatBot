@@ -1,5 +1,6 @@
 """A file containing all the important functions needed for chatbot's smooth functionality"""
 
+from typing import Literal
 from google import genai
 from google.genai import types
 import os
@@ -129,3 +130,14 @@ def chat_history_function(chat_history, input_text, response):
 
 def input_text():
     return input(f"{Yellow}User: {Reset}")
+
+
+def history_function(
+    chat_history: list[types.Content],
+    role: Literal["user"] | Literal["model"],
+    text: str,
+):
+    chat_history.append(
+        types.Content(role=role, parts=[types.Part.from_text(text=text)])
+    )
+    return chat_history
