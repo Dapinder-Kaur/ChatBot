@@ -1,10 +1,11 @@
 import streamlit as st
-from main import input_text
+
 from chatbot import (
     chatbot_response,
     output_function,
     chat_output,
     chatbot_stream_response,
+    input_text,
 )
 
 st.title("Your personal Chatbot")

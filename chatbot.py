@@ -78,6 +78,16 @@ def response_system_prompt(prompt):
     return response
 
 
+def response_system_prompt_without_streaming(prompt):
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+        config=generate_content_config,
+    )
+
+    return response.text
+
+
 # an actual chatbot function
 def chatbot_actual(input_text):
     response = client.models.generate_content_stream(
@@ -116,3 +126,7 @@ def chat_history_function(input_text, response):
         types.Content(role="model", parts=[types.Part.from_text(text=response)])
     )
     return chat_history
+
+
+def input_text():
+    return input(f"{Yellow}User: {Reset}")
