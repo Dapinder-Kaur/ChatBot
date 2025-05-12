@@ -35,25 +35,21 @@ White = "\033[97m"
 
 
 def main():
-    history = []
+    chat_history: list[types.Content] = []
 
     try:
         while True:
-            # to take an input from the user
-            def input_text():
-                return input(f"{Yellow}User: {Reset}")
-
-            input_text = input_text()
+            input_text = input(f"{Yellow}User: {Reset}")
 
             # storing the gemini's response
 
-            history.append(
+            chat_history.append(
                 types.Content(
                     role="user", parts=[types.Part.from_text(text=input_text)]
                 )
             )
 
-            response = response_system_prompt(history)
+            response = response_system_prompt(chat_history)
 
             print(f"{Blue}ChatBot: {Reset}", end="")
 
@@ -63,7 +59,17 @@ def main():
                 print(chunk.text, end="")
                 chunk_response += chunk.text
 
-            history = chat_history_function(input_text, chunk_response)
+            chat_history.append(
+                types.Content(
+                    role="user", parts=[types.Part.from_text(text=input_text)]
+                )
+            )
+            chat_history.append(
+                types.Content(
+                    role="model", parts=[types.Part.from_text(text=chunk_response)]
+                )
+            )
+            # history.append(chat_history_function(input_text, chunk_response))
 
     except KeyboardInterrupt:
 

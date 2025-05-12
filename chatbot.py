@@ -116,9 +116,8 @@ def example_usage():
     return response
 
 
-def chat_history_function(input_text, response):
+def chat_history_function(chat_history, input_text, response):
 
-    chat_history = []
     chat_history.append(
         types.Content(role="user", parts=[types.Part.from_text(text=input_text)])
     )
