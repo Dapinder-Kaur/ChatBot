@@ -20,4 +20,4 @@ with gr.Blocks() as demo:
 
     msg.submit(respond, [msg, chatbot], [msg, chatbot], queue=False)
 
-demo.launch()
+demo.launch(share=True)
