@@ -18,6 +18,6 @@ with gr.Blocks() as demo:
 
         return "", chat_history
 
-    msg.submit(respond, [msg, chatbot], [msg, chatbot], queue=False)
+    msg.submit(respond, [msg, chatbot], [msg, chatbot])
 
-demo.launch(share=True)
+demo.launch()
