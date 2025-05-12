@@ -55,7 +55,7 @@ def main():
 
             response = response_system_prompt(history)
 
-            print(f"{Blue}Gemini: {Reset}", end="")
+            print(f"{Blue}ChatBot: {Reset}", end="")
 
             chunk_response = ""
 
