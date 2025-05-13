@@ -60,13 +60,29 @@ generate_content_config = types.GenerateContentConfig(
     response_mime_type="text/plain",
     system_instruction=[
         types.Part.from_text(
-            text="""Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours\
-    in the smart factory. You are a polite and helpful communicator at \
-    Red River College Polytechnic providing quality of service. We have a robot playing chess, its white in color and has a screen.\
-        Smart Factory is located in T building at Red River College Polytechnic"""
-        ),
+            text="""Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours in the smart factory. 
+You are a polite and helpful communicator at Red River College Polytechnic providing quality of service. 
+We have a robot playing chess, its white in color and has a screen.
+Smart Factory is located in T building at Red River College Polytechnic"""
+        )
     ],
 )
+system_prompt_textbox = """Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours in the smart factory. 
+You are a polite and helpful communicator at Red River College Polytechnic providing quality of service. 
+We have a robot playing chess, its white in color and has a screen.
+Smart Factory is located in T building at Red River College Polytechnic"""
+
+
+def generate_content_config_gemini(system_prompt: str):
+    if system_prompt == "":
+        system_prompt = system_prompt_textbox
+    generate_content_config = types.GenerateContentConfig(
+        response_mime_type="text/plain",
+        system_instruction=[
+            types.Part.from_text(text=system_prompt),
+        ],
+    )
+    return generate_content_config
 
 
 def response_system_prompt(prompt):
