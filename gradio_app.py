@@ -5,11 +5,7 @@ from google import genai
 import os
 from dotenv import load_dotenv
 from google.genai import types
-from chatbot import (
-    chatbot_stream_response,
-    chat_history_function,
-    response_system_prompt,
-)
+from chatbot import *
 
 
 # Load environment variables
@@ -17,67 +13,66 @@ load_dotenv()
 
 client = genai.Client(api_key=os.environ.get("API_KEY"))
 
-# Chatbot function for Gradio
-history = []
-history_gradio = []
-
-
-# def chatbot_interface(user_input):
-#     global history
-#     global history_gradio
-
-#     history.append(
-#         types.Content(role="user", parts=[types.Part.from_text(text=user_input)])
-#     )
-#     history_gradio.append({"role": "user", "content": user_input})
-
-#     response = response_system_prompt(history)
-
-#     chunk_response = "".join(chunk.text for chunk in response)
-
-#     history = chat_history_function(user_input, chunk_response)
-
-#     chunk_response_gradio = ""
-
-#     for chunk in response:
-#         chunk_response_gradio += chunk.text
-#         yield history_gradio + [{"role": "assistant", "content": chunk_response_gradio}]
-
-#     history_gradio.append({"role": "assistant", "content": chunk_response_gradio})
-#     return [
-#         {"role": "user", "content": user_input},
-#         {"role": "assistant", "content": chunk_response},
-#     ]
-
 
 # with gr.Blocks() as demo:
-#     chatbot = gr.Chatbot(label="Chatbot", type="messages")
+#     history_for_gemini = []
+#     chatbot = gr.Chatbot(type="messages")
 #     msg = gr.Textbox()
 #     clear = gr.ClearButton([msg, chatbot])
 
-#     msg.submit(chatbot_interface, inputs=msg, outputs=chatbot)
+#     def respond(message, chat_history):
+#         global history_for_gemini
+#         history_for_gemini = history_function(history_for_gemini, "user", message)
+#         response = client.models.generate_content(
+#             model="gemini-2.0-flash",
+#             contents=history_for_gemini,
+#             config=generate_content_config,
+#         )
+#         history_for_gemini = history_function(
+#             history_for_gemini, "model", response.text
+#         )
+#         chat_history.append({"role": "user", "content": message})
+#         chat_history.append({"role": "assistant", "content": response.text})
+
+#         return "", chat_history
+
+#     msg.submit(fn=respond, inputs=[msg, chatbot], outputs=[msg, chatbot])
+#     # clear.click(lambda: None, None, chatbot, queue=False)
 
 # demo.launch()
 
-import gradio as gr
-import random
-import time
 
 with gr.Blocks() as demo:
+    history_for_gemini = []
     chatbot = gr.Chatbot(type="messages")
     msg = gr.Textbox()
-    clear = gr.ClearButton([msg, chatbot])
+    clear = gr.Button("Clear")
 
-    def respond(message, chat_history):
+    def user(user_message, history: list):
+        global history_for_gemini
+        history_for_gemini = history_function(history_for_gemini, "user", user_message)
+        return "", history + [{"role": "user", "content": user_message}]
+
+    def bot(history: list):
+        global history_for_gemini
 
         response = client.models.generate_content(
             model="gemini-2.0-flash",
-            contents=message,
+            contents=history_for_gemini,
+            config=generate_content_config,
         )
-        chat_history.append({"role": "user", "content": message + "lol"})
-        chat_history.append({"role": "assistant", "content": response.text})
-        return "", chat_history
+        history_for_gemini = history_function(
+            history_for_gemini, "model", response.text
+        )
+        history.append({"role": "assistant", "content": ""})
+        for character in response.text:
+            history[-1]["content"] += character
+            # time.sleep(0.05)
+            yield history
 
-    msg.submit(fn=respond, inputs=[msg, chatbot], outputs=[msg, chatbot])
+    msg.submit(user, [msg, chatbot], [msg, chatbot], queue=False).then(
+        bot, chatbot, chatbot
+    )
+    clear.click(lambda: None, None, chatbot, queue=False)
 
 demo.launch()
