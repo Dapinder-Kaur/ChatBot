@@ -46,7 +46,7 @@ with gr.Blocks() as demo:
     chatbot = gr.Chatbot(type="messages")
     msg_textbox = gr.Textbox()
     clear_button = gr.Button("Clear")
-    with gr.Accordion("Click here", open=False):
+    with gr.Accordion("This is your system prompt", open=False):
         system_prompt_textbox = gr.Textbox(
             label="Enter your system prompt here ...",
             value=system_prompt_value,
