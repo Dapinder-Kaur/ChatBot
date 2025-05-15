@@ -41,8 +41,8 @@ def actual_response():
                     output = main_function(value)
                     response = text_to_speech(output)
                     response.save("response.mp3")
-                    song = AudioSegment.from_mp3("response.mp3")
-                    play(song)
+                    chatbot_response = AudioSegment.from_mp3("response.mp3")
+                    play(chatbot_response)
                     # playsound(r"C:\Users\Riley\Documents\TACAM\ChatBot\response.mp3")
                     # print(output)yes
 
