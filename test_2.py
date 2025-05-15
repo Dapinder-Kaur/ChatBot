@@ -22,6 +22,8 @@ def speechtotext():
 # val = speechtotext()
 # print(val)
 
+
+# To listen what is there in response.mp3
 song = AudioSegment.from_mp3("response.mp3")
 play(song)
 

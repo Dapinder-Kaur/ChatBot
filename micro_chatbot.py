@@ -29,9 +29,9 @@ def actual_response():
             r.adjust_for_ambient_noise(source)
             # print("Set minimum energy threshold to {}".format(r.energy_threshold))
         while cond == True:
-            user_input = input("Enter space if you are ready to Say something!: ")
+            user_input = input("Press Enter if you are ready to Say something!: ")
 
-            if user_input == " ":
+            if user_input == "":
                 print("Alright! Say your word !")
                 with sr.Microphone() as source:
                     audio = r.listen(source=source, timeout=10)
