@@ -24,3 +24,6 @@ def speechtotext():
 
 song = AudioSegment.from_mp3("response.mp3")
 play(song)
+
+new_song = AudioSegment.from_wav("output.wav")
+play(new_song)
