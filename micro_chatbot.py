@@ -24,12 +24,14 @@ r = sr.Recognizer()
 def actual_response():
     cond = True
     try:
-        print("Get ready to say ..")
+        print("Get ready ..")
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source)
             # print("Set minimum energy threshold to {}".format(r.energy_threshold))
         while cond == True:
-            user_input = input("Press Enter if you are ready to Say something!: ")
+            user_input = input(
+                "Press Enter if you are ready to Say something! or press 'w' if you wanna type: "
+            )
 
             if user_input == "":
                 print("Alright! Say your word !")
@@ -54,9 +56,18 @@ def actual_response():
                             e
                         )
                     )
+
+            elif user_input.lower() == "w":
+                user = input("Enter here: ")
+                output = main_function(user)
+                response = text_to_speech(output)
+                response.save("response.mp3")
+                chatbot_response = AudioSegment.from_mp3("response.mp3")
+                play(chatbot_response)
+
             else:
                 cond = False
-                print("Let me know when you are ready..")
+                print("Thank you, bye ..")
     except KeyboardInterrupt:
         pass
 

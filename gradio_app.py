@@ -21,7 +21,7 @@ Smart Factory is located in T building at Red River College Polytechnic.
 Respond only in single sentence."""
 
 
-def user(user_message, history: list):
+def user(user_message: str, history: list):
     global history_for_gemini
     history_for_gemini = history_function(history_for_gemini, "user", user_message)
     return "", history + [{"role": "user", "content": user_message}]

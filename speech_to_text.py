@@ -110,5 +110,27 @@ def main_function():
         sys.exit()
 
 
+def actual_response_function_for_gradio(audio_path):
+    output_path = "output_fixed.wav"
+
+    audio = AudioSegment.from_file(audio_path)
+    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
+    audio.export(output_path, format="wav")
+    try:
+        with sr.AudioFile(output_path) as source:
+            audio_data = recognizer.record(source)
+
+            text = recognizer.recognize_google(audio_data)
+
+            return text
+
+    except sr.UnknownValueError:
+        print("Could not understand audio")
+    except sr.RequestError as e:
+        print(f"Could not request results from Google Speech Recognition service; {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
 if __name__ == "__main__":
     main_function()
