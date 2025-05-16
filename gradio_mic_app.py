@@ -85,8 +85,8 @@ def bot(history: list, prompt):
         yield history
 
     response = gTTS(response.text)
-    response.save("response.mp3")
-    chatbot_response = AudioSegment.from_mp3("response.mp3")
+    response.save("assets/response.mp3")
+    chatbot_response = AudioSegment.from_mp3("assets/response.mp3")
     play(chatbot_response)
 
 

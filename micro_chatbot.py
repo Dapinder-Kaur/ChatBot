@@ -42,8 +42,8 @@ def actual_response():
                     value = r.recognize_google(audio)
                     output = main_function(value)
                     response = text_to_speech(output)
-                    response.save("response.mp3")
-                    chatbot_response = AudioSegment.from_mp3("response.mp3")
+                    response.save("assets/response.mp3")
+                    chatbot_response = AudioSegment.from_mp3("assets/response.mp3")
                     play(chatbot_response)
                     # playsound(r"C:\Users\Riley\Documents\TACAM\ChatBot\response.mp3")
                     # print(output)yes
@@ -61,8 +61,8 @@ def actual_response():
                 user = input("Enter here: ")
                 output = main_function(user)
                 response = text_to_speech(output)
-                response.save("response.mp3")
-                chatbot_response = AudioSegment.from_mp3("response.mp3")
+                response.save("assets/response.mp3")
+                chatbot_response = AudioSegment.from_mp3("assets/response.mp3")
                 play(chatbot_response)
 
             else:
