@@ -1,7 +1,7 @@
 from google import genai
 import os
 from dotenv import load_dotenv
-from main import *
+from main_chatbot import *
 import sounddevice as sd
 import speech_recognition as sr
 from pydub import AudioSegment
