@@ -26,7 +26,4 @@ with right_column:
 output_print = chatbot_stream_response(user_input)
 
 
-# st.session_state.input_text
-
-
 chat_output(output_print)

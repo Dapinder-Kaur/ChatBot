@@ -1,14 +1,14 @@
 from gtts import gTTS
-import os
-from speech_to_text import *
+import speech_to_text
 from pydub.playback import play
+from pydub import AudioSegment
 
 
 def text_to_speech(input_text: str):
     return gTTS(input_text)
 
 
-value_output = main_function()
+value_output = speech_to_text.speech_to_text()
 text = text_to_speech(value_output)
 
 text.save("assets/response.mp3")

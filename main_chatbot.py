@@ -3,23 +3,12 @@ from PIL import Image
 import time
 import streamlit as st
 import os
-from chatbot_functions import (
-    chatbot_stream_response,
-    chat_history_function,
-    response_system_prompt,
-    history_function,
-)
+import chatbot_functions as cb
 import sys
-from dotenv import load_dotenv
 from google.genai import types
 
 
-load_dotenv()
-
-
-client = genai.Client(
-    api_key=os.environ.get("API_KEY"),
-)
+client = cb.client
 
 
 # ANSI escape sequences for colored text
@@ -40,8 +29,8 @@ def main():
     try:
         while True:
             input_text = input(f"{Yellow}User: {Reset}")
-            chat_history = history_function(chat_history, "user", input_text)
-            response = response_system_prompt(chat_history)
+            chat_history = cb.history_function(chat_history, "user", input_text)
+            response = cb.response_system_prompt(chat_history)
             print(f"{Blue}ChatBot: {Reset}", end="")
             chunk_response = ""
 
@@ -49,7 +38,7 @@ def main():
                 print(chunk.text, end="")
                 chunk_response += chunk.text
 
-            chat_history = history_function(chat_history, "model", chunk_response)
+            chat_history = cb.history_function(chat_history, "model", chunk_response)
 
     except KeyboardInterrupt:
         print(f"\n{Red}Exiting...{Reset}")

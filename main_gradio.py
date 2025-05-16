@@ -1,30 +1,19 @@
 import gradio as gr
-import random
-import time
 from google import genai
-import os
-from dotenv import load_dotenv
+
 from google.genai import types
-from chatbot_functions import *
+import chatbot_functions as cb
 
 
-# Load environment variables
-load_dotenv()
-
-client = genai.Client(api_key=os.environ.get("API_KEY"))
+client = cb.client
 history_for_gemini = []
 
-system_prompt_value = """Your name is Baxter, and you are a personal assistant at TACAM, whose job is to give the tours in the smart factory. 
-You are a polite and helpful communicator at Red River College Polytechnic providing quality of service. 
-We have a robot playing chess, its white in color and has a screen.
-Smart Factory is located in T building at Red River College Polytechnic.
-Respond only in single sentence.
-If user's input is blank, ask to repeat again saying that you did not understand."""
+system_prompt_value = cb.system_prompt_textbox
 
 
 def user(user_message: str, history: list):
     global history_for_gemini
-    history_for_gemini = history_function(history_for_gemini, "user", user_message)
+    history_for_gemini = cb.history_function(history_for_gemini, "user", user_message)
     return "", history + [{"role": "user", "content": user_message}]
 
 
@@ -34,9 +23,9 @@ def bot(history: list, prompt):
     response = client.models.generate_content(
         model="gemini-2.0-flash",
         contents=history_for_gemini,
-        config=generate_content_config_gemini(prompt),
+        config=cb.generate_content_config_gemini(prompt),
     )
-    history_for_gemini = history_function(history_for_gemini, "model", response.text)
+    history_for_gemini = cb.history_function(history_for_gemini, "model", response.text)
     history.append({"role": "assistant", "content": ""})
     for character in response.text:
         history[-1]["content"] += character

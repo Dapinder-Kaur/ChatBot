@@ -82,7 +82,7 @@ def actual_response_function(audio_in):
 model_response = ""
 
 
-def main_function():
+def speech_to_text():
     global model_response
     chat_history: list[types.Content] = []
     len_files = 1
@@ -133,4 +133,4 @@ def actual_response_function_for_gradio(audio_path):
 
 
 if __name__ == "__main__":
-    main_function()
+    speech_to_text()
