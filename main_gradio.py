@@ -5,7 +5,7 @@ from google import genai
 import os
 from dotenv import load_dotenv
 from google.genai import types
-from chatbot import *
+from chatbot_functions import *
 
 
 # Load environment variables

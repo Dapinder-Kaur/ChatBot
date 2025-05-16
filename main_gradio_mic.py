@@ -5,7 +5,7 @@ from google import genai
 import os
 from dotenv import load_dotenv
 from google.genai import types
-from chatbot import generate_content_config_gemini, history_function
+from chatbot_functions import generate_content_config_gemini, history_function
 from speech_to_text import actual_response_function_for_gradio
 from pydub.playback import play
 from gtts import gTTS

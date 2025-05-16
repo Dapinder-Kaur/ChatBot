@@ -3,7 +3,7 @@ from PIL import Image
 import time
 import streamlit as st
 import os
-from chatbot import (
+from chatbot_functions import (
     chatbot_stream_response,
     chat_history_function,
     response_system_prompt,
