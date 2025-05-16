@@ -23,7 +23,8 @@ system_prompt_value = """Your name is Baxter, and you are a personal assistant a
 You are a polite and helpful communicator at Red River College Polytechnic providing quality of service. 
 We have a robot playing chess, its white in color and has a screen.
 Smart Factory is located in T building at Red River College Polytechnic.
-Respond only in single sentence."""
+Respond only in single sentence.
+If user's input is blank, ask to repeat again saying that you did not understand."""
 
 
 def audio_to_text(audio_file_path):
@@ -34,7 +35,7 @@ def audio_to_text(audio_file_path):
         text = r.recognize_google(audio)
         return text
     except sr.UnknownValueError:
-        return "Could not understand audio"
+        return "  "
     except sr.RequestError as e:
         return f"Could not request results from Google Speech Recognition service; {e}"
 
