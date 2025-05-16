@@ -34,12 +34,17 @@ def actual_response():
             if user_input == "":
                 print("Alright! Say your word !")
 
-                with sr.Microphone() as source:
-                    audio = r.listen(source=source, timeout=10)
-                    print("Wait please...")
-
                 try:
+                    with sr.Microphone() as source:
+                        audio = r.listen(source=source, timeout=10)
+                        print("Wait please...")
+
                     value = r.recognize_google(audio)
+
+                    if value == None:
+                        print("Try again please, could not hear")
+                        continue
+
                     output = main_function(value)
                     response = text_to_speech(output)
                     response.save("assets/response.mp3")
@@ -48,6 +53,9 @@ def actual_response():
 
                 except sr.UnknownValueError:
                     print("Oops! Didn't catch that")
+
+                except sr.WaitTimeoutError:
+                    print("Try again")
 
                 except sr.RequestError as e:
                     print("Couldn't request results from Google; {0}".format(e))

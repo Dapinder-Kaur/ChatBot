@@ -1,20 +1,15 @@
 from google import genai
-import os
-from dotenv import load_dotenv
-from main_chatbot import *
+
+import sys
+import chatbot_functions as cb
 import sounddevice as sd
 from scipy.io.wavfile import write
 import speech_recognition as sr
 import scipy.io.wavfile as wav
 from pydub import AudioSegment
 
-load_dotenv()
 
-client = genai.Client(
-    api_key=os.environ.get("API_KEY"),
-)
-
-
+client = cb.client
 recognizer = sr.Recognizer()
 fs = 44100
 seconds = 1
@@ -22,25 +17,30 @@ seconds = 1
 
 def speechtotext():
     r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Say something!")
-        audio = r.listen(source=source)
+
+    try:
+        with sr.Microphone() as source:
+            print("Say something!")
+            audio = r.listen(source=source)
         text = r.recognize_google(audio)
         return text
 
+    except sr.UnknownValueError:
+        print("Could not understand.")
+
+    except sr.WaitTimeoutError:
+        print("Try again!!")
+
 
 def recording_function():
-    myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
+    my_recording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
     sd.wait()
-
     filename_input = "output.WAV"
-    write(filename_input, fs, myrecording)
+    write(filename_input, fs, my_recording)
     return filename_input
 
 
-# myfile = client.files.upload(
-#     file=r"C:\Users\Riley\Documents\Audio_files\hello-46355.mp3"
-# )
+# function for using gemini to transcribe the text
 def gemini_response_function(input_f):
     myfile = client.files.upload(file=input_f)
 
@@ -55,26 +55,30 @@ def gemini_response_function(input_f):
     return response.text
 
 
-def actual_response_function(audio_in):
+# when reading an input file and audio data is not in .wav format
+def actual_response_function():
     output_path = "output_fixed.wav"
 
+    # the file path can be replaced with the actual path
     audio = AudioSegment.from_file(r"C:\Users\Riley\Documents\TACAM\ChatBot\output.wav")
+
     audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
     audio.export(output_path, format="wav")
+
     try:
         with sr.AudioFile(output_path) as source:
             audio_data = recognizer.record(source)
-
-            text = recognizer.recognize_google(audio_data)
-            if text == "":
-                text = "hi"
-
-            return text
+        text = recognizer.recognize_google(audio_data)
+        return text
 
     except sr.UnknownValueError:
         print("Could not understand audio")
+        text = " "
+        return text
+
     except sr.RequestError as e:
         print(f"Could not request results from Google Speech Recognition service; {e}")
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -84,52 +88,36 @@ model_response = ""
 
 def speech_to_text():
     global model_response
-    chat_history: list[types.Content] = []
-    len_files = 1
-    n = 1
+    chat_history: list[cb.types.Content] = []
+
     try:
         while True:
             input_text = speechtotext()
-            print(f"{Yellow}User: {Reset}{input_text}")
-            chat_history = history_function(chat_history, "user", input_text)
-            response = response_system_prompt(chat_history)
-            print(f"{Blue}ChatBot: {Reset}", end="")
+
+            if input_text == None:
+                sys.exit("Try to speak again.")
+
+            print(f"{cb.Yellow}User: {cb.Reset}{input_text}")
+
+            chat_history = cb.history_function(chat_history, "user", input_text)
+            response = cb.response_system_prompt(chat_history)
+
+            print(f"{cb.Blue}ChatBot: {cb.Reset}", end="")
+
             chunk_response = ""
 
             for chunk in response:
                 print(chunk.text, end="")
                 chunk_response += chunk.text
 
-            chat_history = history_function(chat_history, "model", chunk_response)
+            chat_history = cb.history_function(chat_history, "model", chunk_response)
             model_response = chunk_response
+
             return model_response
 
-            n += 1
     except KeyboardInterrupt:
-        print(f"\n{Red}Exiting .... {Reset}")
+        print(f"\n{cb.Red}Exiting .... {cb.Reset}")
         sys.exit()
-
-
-def actual_response_function_for_gradio(audio_path):
-    output_path = "output_fixed.wav"
-
-    audio = AudioSegment.from_file(audio_path)
-    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
-    audio.export(output_path, format="wav")
-    try:
-        with sr.AudioFile(output_path) as source:
-            audio_data = recognizer.record(source)
-
-            text = recognizer.recognize_google(audio_data)
-
-            return text
-
-    except sr.UnknownValueError:
-        print("Could not understand audio")
-    except sr.RequestError as e:
-        print(f"Could not request results from Google Speech Recognition service; {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
