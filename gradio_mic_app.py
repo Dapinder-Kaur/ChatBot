@@ -110,15 +110,9 @@ with gr.Blocks() as demo:
             lines=5,
         )
 
-    chat_msg = chat_input.submit(
-        add_message, [chatbot, chat_input], [chatbot, chat_input]
-    )
-    # audio_msg = chat_msg.then(process_audio, [chatbot, audio_input], chatbot)
-
-    bot_msg = chat_msg.then(
+    chat_input.submit(add_message, [chatbot, chat_input], [chatbot, chat_input]).then(
         bot, [chatbot, system_prompt_textbox], chatbot, api_name="bot_response"
-    )
-    bot_msg.then(lambda: gr.Textbox(interactive=True), None, [chat_input])
+    ).then(lambda: gr.Textbox(interactive=True), None, [chat_input])
 
     audio_button.click(
         process_audio, [chatbot, audio_input], [chatbot, audio_input]
