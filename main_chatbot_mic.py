@@ -12,7 +12,6 @@ from pydub.playback import play
 
 load_dotenv()
 
-
 client = genai.Client(
     api_key=os.environ.get("API_KEY"),
 )
