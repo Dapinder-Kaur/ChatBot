@@ -3,7 +3,7 @@ from PIL import Image
 import time
 import streamlit as st
 import os
-import chatbot_functions as cb
+import chatbot as cb
 import sys
 from google.genai import types
 

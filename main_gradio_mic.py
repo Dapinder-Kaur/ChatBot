@@ -6,7 +6,7 @@ from pydub.playback import play
 from gtts import gTTS
 from pydub import AudioSegment
 import speech_recognition as sr
-import chatbot_functions as cb
+import chatbot as cb
 
 
 client = cb.client

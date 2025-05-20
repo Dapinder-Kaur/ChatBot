@@ -9,7 +9,7 @@ from gtts import gTTS
 from playsound import playsound
 from pydub import AudioSegment
 from pydub.playback import play
-import chatbot_functions as cb
+import chatbot as cb
 
 
 client = cb.client

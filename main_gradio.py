@@ -2,7 +2,7 @@ import gradio as gr
 from google import genai
 
 from google.genai import types
-import chatbot_functions as cb
+import chatbot as cb
 
 
 client = cb.client

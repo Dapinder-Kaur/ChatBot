@@ -1,7 +1,7 @@
 from google import genai
 
 import sys
-import chatbot_functions as cb
+import chatbot as cb
 import sounddevice as sd
 from scipy.io.wavfile import write
 import speech_recognition as sr

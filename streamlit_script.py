@@ -1,6 +1,6 @@
 import streamlit as st
 
-from chatbot_functions import (
+from chatbot import (
     chatbot_response,
     output_function,
     chat_output,
