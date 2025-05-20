@@ -95,7 +95,8 @@ def speech_to_text():
             input_text = speechtotext()
 
             if input_text == None:
-                sys.exit("Try to speak again.")
+                print("Try to speak again.")
+                continue
 
             print(f"{cb.Yellow}User: {cb.Reset}{input_text}")
 
