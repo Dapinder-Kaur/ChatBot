@@ -69,7 +69,8 @@ def bot(history: list, prompt):
 
 
 with gr.Blocks() as demo:
-    chatbot = gr.Chatbot(elem_id="chatbot", type="messages")
+    # chatbot = gr.Chatbot(elem_id="chatbot", type="messages")
+    chatbot = gr.Chatbot(elem_id="chatbot")
     chat_input = gr.Textbox()
     with gr.Row():
         audio_input = gr.Audio(sources=["microphone"], type="filepath")
