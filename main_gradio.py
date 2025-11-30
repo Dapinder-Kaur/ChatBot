@@ -34,7 +34,8 @@ def bot(history: list, prompt):
 
 
 with gr.Blocks() as demo:
-    chatbot = gr.Chatbot(type="messages")
+    # chatbot = gr.Chatbot(type="messages")
+    chatbot = gr.Chatbot(elem_id="chatbot")
     msg_textbox = gr.Textbox()
     clear_button = gr.Button("Clear")
     with gr.Accordion("This is your system prompt", open=False):
